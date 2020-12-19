@@ -1,5 +1,5 @@
 import * as postsAPI from '../api/post';
-import { createPromiseThunk, reducerUtils } from '../lib/asyncUtils';
+import { createPromiseThunk, handleAsyncActions, reducerUtils } from '../lib/asyncUtils';
 
 const GET_POSTS = 'posts/GET_POSTS';
 const GET_POSTS_SUCCESS = '.posts/GET_POSTS_SUCCESS';
@@ -17,38 +17,19 @@ const initialState = {
     postById: reducerUtils.initial()
 }
 
+const getPostsReducer = handleAsyncActions(GET_POSTS, 'posts');
+const getPostByIdReducer = handleAsyncActions(GET_POSTBYID, 'postById');
+
 export default function posts(state = initialState, action) {
     switch (action.type) {
         case GET_POSTS:
-            return {
-                ...state,
-                posts: reducerUtils.loading() //state.posts.data = 기존상태의 값을 null로 바꾸지 않고 유지한다면
-            };
         case GET_POSTS_SUCCESS:
-            return {
-                ...state,
-                posts: reducerUtils.success(action.payload)
-            };
         case GET_POSTS_ERROR:
-            return {
-                ...state,
-                posts: reducerUtils.error(action.payload)
-            }
-            case GET_POSTBYID:
-                return {
-                    ...state,
-                    postById: reducerUtils.loading()
-                };
-            case GET_POSTBYID_SUCCESS:
-                return {
-                    ...state,
-                    postById: reducerUtils.success(action.payload)
-                };
-            case GET_POSTBYID_ERROR:
-                return {
-                    ...state,
-                    postById: reducerUtils.error(action.payload)
-                }
+            return getPostsReducer(state, action);
+        case GET_POSTBYID:
+        case GET_POSTBYID_SUCCESS:
+        case GET_POSTBYID_ERROR:
+            return getPostByIdReducer(state, action);
         default:
             return state;
     }
