@@ -55,12 +55,12 @@ export const reducerUtils = {
         loading: true,
         error: null
     }),
-    success: (data) => ({
+    success: data => ({
         data,
         loading: false,
         error: null
     }),
-    error: (error) => ({
+    error: error => ({
         data: null,
         loading: false,
         error

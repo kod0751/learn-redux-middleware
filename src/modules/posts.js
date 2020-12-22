@@ -1,13 +1,13 @@
-import * as postsAPI from '../api/post';
+import * as postsAPI from '../api/posts';
 import { createPromiseThunk, handleAsyncActions, reducerUtils } from '../lib/asyncUtils';
 
-const GET_POSTS = 'posts/GET_POSTS';
-const GET_POSTS_SUCCESS = '.posts/GET_POSTS_SUCCESS';
-const GET_POSTS_ERROR = './posts/GET_POSTS_ERROR';
+const GET_POSTS = 'GET_POSTS';
+const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
+const GET_POSTS_ERROR = 'GET_POSTS_ERROR';
 
-const GET_POSTBYID = 'posts/GET_POSTBYID';
-const GET_POSTBYID_SUCCESS = 'posts/GET_POSTBYID_SUCCESS';
-const GET_POSTBYID_ERROR = 'posts/GET_POSTBYID_ERROR'; 
+const GET_POSTBYID = 'GET_POSTBYID';
+const GET_POSTBYID_SUCCESS = 'GET_POSTBYID_SUCCESS';
+const GET_POSTBYID_ERROR = 'GET_POSTBYID_ERROR'; 
 
 export const getPosts = createPromiseThunk(GET_POSTS, postsAPI.getPosts);
 export const getPostById = createPromiseThunk(GET_POSTBYID, postsAPI.getPostById);
