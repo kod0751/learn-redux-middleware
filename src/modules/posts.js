@@ -1,6 +1,6 @@
 import * as postsAPI from '../api/posts';
 import { createPromiseSaga, createPromiseSagaById, handleAsyncActions, handleAsyncActionsById, reducerUtils } from '../lib/asyncUtils'; // createPromiseThunk, createPromiseThunkById redux-thunk
-import { takeEvery } from 'redux-saga/effects'
+import { takeEvery, getContext } from 'redux-saga/effects'
 
 const GET_POSTS = 'GET_POSTS';
 const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
@@ -9,6 +9,7 @@ const GET_POSTS_ERROR = 'GET_POSTS_ERROR';
 const GET_POSTBYID = 'GET_POSTBYID';
 const GET_POSTBYID_SUCCESS = 'GET_POSTBYID_SUCCESS';
 const GET_POSTBYID_ERROR = 'GET_POSTBYID_ERROR'; 
+const GO_TO_HOME = 'GO_TO_HOME';
 
 const CLEAR_POST = 'CLEAR_POST';
 
@@ -24,15 +25,18 @@ export const getPostById = id => ({
 
 const getPostsSaga = createPromiseSaga(GET_POSTS, postsAPI.getPosts);
 const getPostByIdSaga = createPromiseSagaById(GET_POSTBYID, postsAPI.getPostById);
+function* goToHomeSaga() {
+    const history = yield getContext('history');
+    history.push('/');
+}
 
 export function* postsSaga() {
     yield takeEvery(GET_POSTS, getPostsSaga);
     yield takeEvery(GET_POSTBYID, getPostByIdSaga);
+    yield takeEvery(GO_TO_HOME, goToHomeSaga);
 }
 
-export const goToHome = () => (dispatch, getState, { history }) => {
-    history.push('/');
-}
+export const goToHome = () => ({ type: GO_TO_HOME });
 
 export const clearPost = () => ({ type: CLEAR_POST });
 
