@@ -1,6 +1,6 @@
 import * as postsAPI from '../api/posts';
-import { createPromiseThunk, createPromiseThunkById, handleAsyncActions, handleAsyncActionsById, reducerUtils } from '../lib/asyncUtils';
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { createPromiseSaga, createPromiseSagaById, handleAsyncActions, handleAsyncActionsById, reducerUtils } from '../lib/asyncUtils'; // createPromiseThunk, createPromiseThunkById redux-thunk
+import { takeEvery } from 'redux-saga/effects'
 
 const GET_POSTS = 'GET_POSTS';
 const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
@@ -22,40 +22,8 @@ export const getPostById = id => ({
     meta: id,
 });  //redux-saga
 
-function* getPostsSaga() {
-    try {
-        const posts = yield call(postsAPI.getPosts);
-        yield put({
-            type: GET_POSTS_SUCCESS,
-            payload: posts,
-        });
-    } catch (e) {
-        yield put({
-            type: GET_POSTS_ERROR,
-            payload: e,
-            error: true
-        });
-    }
-}
-
-function* getPostByIdSaga(action) {
-    const id = action.payload;
-    try {
-        const postById = yield call(postsAPI.getPostById, id);
-        yield put({
-            type: GET_POSTBYID_SUCCESS,
-            payload: postById,
-            meta: id
-        });
-    } catch (e) {
-        yield put({
-            type: GET_POSTBYID_ERROR,
-            payload: e,
-            error: true,
-            meta: id
-        });
-    }
-};
+const getPostsSaga = createPromiseSaga(GET_POSTS, postsAPI.getPosts);
+const getPostByIdSaga = createPromiseSagaById(GET_POSTBYID, postsAPI.getPostById);
 
 export function* postsSaga() {
     yield takeEvery(GET_POSTS, getPostsSaga);
